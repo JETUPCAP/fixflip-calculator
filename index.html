@@ -1,11 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Fix & Flip Deal Analyzer | Jet Up Capital</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <style>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
       --green:        #4a9e6e;
@@ -28,31 +22,50 @@
       --radius:       10px;
       --radius-sm:    6px;
     }
-    body { font-family:'Inter',system-ui,sans-serif; background:var(--bg); color:var(--text); min-height:100vh; padding:2rem 1rem 4rem; -webkit-font-smoothing:antialiased; }
+    body { font-family:'Inter',system-ui,sans-serif; background:var(--bg); color:var(--text); min-height:100vh; padding:2rem 1rem 4rem; -webkit-font-smoothing:antialiased; font-size:18px; }
     .page-wrap { max-width:980px; margin:0 auto; }
+    .page-wrap * { box-sizing:border-box !important; }
+    .page-wrap p:not(.card-title):not(.eyebrow):not(.modal-eyebrow):not(.sc-label):not(.sc-sub):not(.er-label):not(.modal-fine):not(.modal-hint), .page-wrap span, .page-wrap label { background:transparent !important; }
     .header { text-align:center; margin-bottom:2.5rem; }
     .logo-wrap { display:inline-flex; align-items:center; gap:10px; margin-bottom:1.25rem; }
-    .logo-box { width:34px; height:34px; border:1.5px solid var(--green); border-radius:6px; display:flex; align-items:center; justify-content:center; }
-    .logo-box svg { width:16px; height:16px; }
-    .logo-name { font-size:13px; font-weight:700; letter-spacing:.05em; text-transform:uppercase; color:var(--text); }
-    .eyebrow { font-size:11px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:var(--green); margin-bottom:.5rem; }
-    .header h1 { font-size:clamp(1.5rem,4vw,2rem); font-weight:700; color:var(--text); margin-bottom:.4rem; line-height:1.2; }
-    .header p { font-size:14px; color:var(--text-mid); max-width:440px; margin:0 auto; line-height:1.6; }
+    .logo-box { width:40px; height:40px; border:1.5px solid var(--green); border-radius:6px; display:flex; align-items:center; justify-content:center; }
+    .logo-box svg { width:22px; height:22px; }
+    .logo-name { font-size:18px; font-weight:700; letter-spacing:.05em; text-transform:uppercase; color:var(--text); }
+    .eyebrow { font-size:21px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:var(--green); margin-bottom:.5rem; }
+    .header h1 { font-size:clamp(2rem,4vw,2.75rem); font-weight:700; color:var(--text); margin-bottom:.4rem; line-height:1.2; }
+    .header p { font-size:21px; color:var(--text-mid); max-width:440px; margin:0 auto; line-height:1.6; }
     .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
     @media(max-width:660px){.grid-2{grid-template-columns:1fr;}}
     .card { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius); padding:1.25rem; margin-bottom:1rem; }
-    .card-title { font-size:10px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:var(--text-dim); margin-bottom:1rem; }
-    label { display:block; font-size:12px; font-weight:500; color:var(--text-mid); margin-bottom:4px; }
-    select,input[type="number"] { width:100%; padding:9px 12px; border:1px solid var(--border); border-radius:var(--radius-sm); font-family:inherit; font-size:13px; color:var(--text); background:var(--bg-input); outline:none; transition:border-color .15s; appearance:none; }
-    select { background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23666' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 10px center; padding-right:30px; }
-    select:focus,input:focus { border-color:var(--green); box-shadow:0 0 0 3px var(--green-dim); }
+    .card-title { font-size:17px !important; font-weight:600 !important; letter-spacing:.1em !important; text-transform:uppercase !important; color:var(--text-dim) !important; margin-bottom:1rem !important; background:transparent !important; }
+    label { display:block !important; font-size:17px !important; font-weight:500 !important; color:var(--text-mid) !important; margin-bottom:4px !important; background:transparent !important; }
+    select,input[type="number"] { width:100% !important; padding:10px 12px !important; border:1px solid var(--border) !important; border-radius:var(--radius-sm) !important; font-family:inherit !important; font-size:17px !important; color:var(--text) !important; background:var(--bg-input) !important; outline:none !important; transition:border-color .15s !important; appearance:none !important; box-shadow:none !important; }
+    select { background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23666' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") !important; background-repeat:no-repeat !important; background-position:right 10px center !important; background-color:var(--bg-input) !important; padding-right:30px !important; }
+    select:focus,input:focus { border-color:var(--green) !important; box-shadow:0 0 0 3px var(--green-dim) !important; }
+    select option { background:#1e1e1e !important; color:#f0f0f0 !important; }
+    .lbox-label { font-size:21px; color:var(--text-mid); }
+    .lbox-sub { font-size:21px; color:var(--text-dim); }
+    .lbox-amount { font-size:26px; font-weight:600; color:var(--text); letter-spacing:-.01em; }
+    .sc-label { font-size:21px; color:var(--text-dim); margin-bottom:3px; }
+    .sc-val   { font-size:24px; font-weight:600; color:var(--text); letter-spacing:-.01em; }
+    .sc-sub   { font-size:21px; color:var(--text-dim); margin-top:3px; }
+    .ri { display:flex; justify-content:space-between; align-items:center; padding:7px 0; border-bottom:1px solid var(--border-light); font-size:21px; }
+    .rl { color:var(--text-mid); }
+    .rl small { font-size:21px; color:var(--text-dim); }
+    .rv { font-weight:500; color:var(--text); font-variant-numeric:tabular-nums; }
+    .ri.total-row .rv { font-size:21px; }
+    .er-label { font-size:21px; color:var(--text-dim); margin-bottom:2px; }
+    .er-val   { font-size:21px; font-weight:600; color:var(--text); }
+    .badge { display:inline-block; font-size:21px; font-weight:500; padding:3px 9px; border-radius:4px; }
+    .cta-text h3 { font-size:21px; font-weight:700; color:#fff; margin-bottom:2px; }
+    .cta-text p  { font-size:21px; color:rgba(255,255,255,.75); }
     select option { background:var(--bg-input); }
-    .input-wrap { position:relative; }
-    .input-wrap .prefix { position:absolute; left:10px; top:50%; transform:translateY(-50%); font-size:13px; color:var(--text-dim); pointer-events:none; }
-    .input-wrap input { padding-left:22px; }
+    .input-wrap { position:relative !important; }
+    .input-wrap .prefix { position:absolute !important; left:10px !important; top:50% !important; transform:translateY(-50%) !important; font-size:16px !important; color:var(--text-dim) !important; pointer-events:none !important; z-index:1 !important; }
+    .input-wrap input { padding-left:22px !important; }
     .field { margin-bottom:10px; }
     .field:last-child { margin-bottom:0; }
-    .badge { display:inline-block; font-size:11px; font-weight:500; padding:2px 8px; border-radius:4px; }
+    .badge { display:inline-block; font-size:14px; font-weight:500; padding:2px 8px; border-radius:4px; }
     .badge-green   { background:var(--green-dim); color:var(--green); border:1px solid var(--green-border); }
     .badge-blue    { background:rgba(60,120,200,.12); color:#6a9fe8; border:1px solid rgba(60,120,200,.25); }
     .badge-amber   { background:var(--amber-dim); color:var(--amber); border:1px solid rgba(212,160,23,.25); }
@@ -61,83 +74,93 @@
     .badge-pass    { background:var(--green-dim); color:var(--green); border:1px solid var(--green-border); }
     .badge-fail    { background:var(--red-dim); color:var(--red); border:1px solid rgba(224,82,82,.25); }
     .badge-warn    { background:var(--amber-dim); color:var(--amber); border:1px solid rgba(212,160,23,.25); }
-    .chip { display:inline-flex; align-items:center; gap:4px; font-size:11px; color:var(--text-mid); background:var(--bg-raised); border:1px solid var(--border); border-radius:4px; padding:2px 8px; }
+    .chip { display:inline-flex; align-items:center; gap:4px; font-size:14px; color:var(--text-mid); background:var(--bg-raised); border:1px solid var(--border); border-radius:4px; padding:2px 8px; }
     .chip strong { color:var(--text); font-weight:600; }
     .loan-box { background:var(--bg-raised); border:1px solid var(--border-light); border-radius:var(--radius-sm); padding:10px 14px; margin-bottom:8px; }
     .loan-box:last-child { margin-bottom:0; }
     .lbox-top { display:flex; justify-content:space-between; align-items:baseline; }
-    .lbox-label { font-size:12px; color:var(--text-mid); }
-    .lbox-sub { font-size:11px; color:var(--text-dim); }
-    .lbox-amount { font-size:19px; font-weight:600; color:var(--text); letter-spacing:-.01em; }
+    .lbox-label { font-size:21px; color:var(--text-mid); }
+    .lbox-sub { font-size:14px; color:var(--text-dim); }
+    .lbox-amount { font-size:21px; font-weight:600; color:var(--text); letter-spacing:-.01em; }
     .lbox-meta { display:flex; justify-content:space-between; margin-top:3px; }
     .loan-box.total { background:var(--green-dim); border-color:var(--green-border); }
     .loan-box.total .lbox-amount { color:var(--green); }
     .summary-card { background:var(--bg-raised); border:1px solid var(--border-light); border-radius:var(--radius-sm); padding:12px 14px; }
-    .sc-label { font-size:11px; color:var(--text-dim); margin-bottom:3px; }
+    .sc-label { font-size:14px; color:var(--text-dim); margin-bottom:3px; }
     .sc-val   { font-size:18px; font-weight:600; color:var(--text); letter-spacing:-.01em; }
-    .sc-sub   { font-size:11px; color:var(--text-dim); margin-top:3px; }
-    .ri { display:flex; justify-content:space-between; align-items:center; padding:6px 0; border-bottom:1px solid var(--border-light); font-size:13px; }
+    .sc-sub   { font-size:14px; color:var(--text-dim); margin-top:3px; }
+    .ri { display:flex; justify-content:space-between; align-items:center; padding:6px 0; border-bottom:1px solid var(--border-light); font-size:21px; }
     .ri:last-child { border-bottom:none; }
     .rl { color:var(--text-mid); }
-    .rl small { font-size:11px; color:var(--text-dim); }
+    .rl small { font-size:14px; color:var(--text-dim); }
     .rv { font-weight:500; color:var(--text); font-variant-numeric:tabular-nums; }
     .ri.total-row { border-top:1px solid var(--border); padding-top:10px; margin-top:4px; border-bottom:none; }
     .ri.total-row .rl { font-weight:600; color:var(--text); }
-    .ri.total-row .rv { font-size:14px; }
+    .ri.total-row .rv { font-size:21px; }
     .exit-row { display:flex; align-items:center; justify-content:space-between; background:var(--bg-raised); border:1px solid var(--border-light); border-radius:var(--radius-sm); padding:10px 14px; }
-    .er-label { font-size:11px; color:var(--text-dim); margin-bottom:2px; }
-    .er-val   { font-size:14px; font-weight:600; color:var(--text); }
+    .er-label { font-size:14px; color:var(--text-dim); margin-bottom:2px; }
+    .er-val   { font-size:21px; font-weight:600; color:var(--text); }
     .ineligible { display:none; background:var(--red-dim); border:1px solid rgba(224,82,82,.25); border-radius:var(--radius-sm); padding:10px 14px; margin-bottom:12px; }
-    .in-title { font-size:13px; font-weight:600; color:var(--red); margin-bottom:2px; }
-    .in-body  { font-size:12px; color:var(--red); }
+    .in-title { font-size:21px; font-weight:600; color:var(--red); margin-bottom:2px; }
+    .in-body  { font-size:21px; color:var(--red); }
     hr.div { border:none; border-top:1px solid var(--border-light); margin:10px 0; }
     .cta-card { background:linear-gradient(135deg,var(--green-hover) 0%,#2a6644 100%); border-radius:var(--radius); padding:1.25rem 1.5rem; display:flex; align-items:center; justify-content:space-between; gap:1rem; margin-top:1rem; }
-    .cta-text h3 { font-size:15px; font-weight:700; color:#fff; margin-bottom:2px; }
-    .cta-text p  { font-size:13px; color:rgba(255,255,255,.75); }
-    .cta-btn { white-space:nowrap; background:#fff; color:var(--green-hover); border:none; border-radius:var(--radius-sm); padding:10px 20px; font-family:inherit; font-size:13px; font-weight:700; cursor:pointer; text-decoration:none; display:inline-block; transition:transform .1s,box-shadow .15s; box-shadow:0 2px 8px rgba(0,0,0,.3); }
-    .cta-btn:hover { transform:translateY(-1px); box-shadow:0 4px 14px rgba(0,0,0,.4); }
+    .cta-text h3 { font-size:21px; font-weight:700; color:#fff; margin-bottom:2px; }
+    .cta-text p  { font-size:21px; color:rgba(255,255,255,.75); }
+    .cta-btn { white-space:nowrap !important; background:#fff !important; color:var(--green-hover) !important; border:none !important; border-radius:var(--radius-sm) !important; padding:10px 20px !important; font-family:inherit !important; font-size:13px !important; font-weight:700 !important; cursor:pointer !important; text-decoration:none !important; display:inline-block !important; transition:transform .1s,box-shadow .15s !important; box-shadow:0 2px 8px rgba(0,0,0,.3) !important; }
+    .cta-btn:hover { transform:translateY(-1px) !important; box-shadow:0 4px 14px rgba(0,0,0,.4) !important; background:#fff !important; color:var(--green-hover) !important; }
     @media(max-width:520px){.cta-card{flex-direction:column;align-items:flex-start;}}
 
     /* Modal */
-    .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.75); z-index:1000; align-items:center; justify-content:center; padding:1rem; backdrop-filter:blur(4px); }
+    .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.75); z-index:2147483647; align-items:center; justify-content:center; padding:1rem; backdrop-filter:blur(4px); }
     .modal-overlay.open { display:flex; }
-    .modal { background:var(--bg-card); border:1px solid var(--border); border-radius:14px; width:100%; max-width:480px; padding:2rem; position:relative; animation:modalIn .2s ease; }
+    .modal { background:var(--bg-card); border:1px solid var(--border); border-radius:14px; width:100%; max-width:480px; padding:2rem; position:relative; animation:modalIn .2s ease; max-height:90vh; overflow-y:auto; overflow-x:visible; }
     @keyframes modalIn { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
     .modal-close { position:absolute; top:14px; right:14px; background:var(--bg-raised); border:1px solid var(--border); border-radius:6px; color:var(--text-mid); font-size:18px; line-height:1; width:28px; height:28px; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:color .15s; }
     .modal-close:hover { color:var(--text); }
     .modal-eyebrow { font-size:10px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:var(--green); margin-bottom:.5rem; }
-    .modal h2 { font-size:1.25rem; font-weight:700; color:var(--text); margin-bottom:.5rem; line-height:1.3; }
-    .modal-sub { font-size:13px; color:var(--text-mid); line-height:1.6; margin-bottom:1.5rem; }
+    .modal h2 { font-size:1.5rem; font-weight:700; color:var(--text); margin-bottom:.5rem; line-height:1.3; }
+    .modal-sub { font-size:13px !important; color:var(--text-mid) !important; line-height:1.6 !important; margin-bottom:1.5rem !important; background:transparent !important; background-color:transparent !important; padding:0 !important; }
     .modal-field { margin-bottom:12px; }
-    .modal-field label { display:block; font-size:12px; font-weight:500; color:var(--text-mid); margin-bottom:4px; }
-    .modal-field input[type="text"],.modal-field input[type="email"] { width:100%; padding:10px 12px; border:1px solid var(--border); border-radius:var(--radius-sm); font-family:inherit; font-size:13px; color:var(--text); background:var(--bg-input); outline:none; transition:border-color .15s; }
-    .modal-field input:focus { border-color:var(--green); box-shadow:0 0 0 3px var(--green-dim); }
-    .modal-field input::placeholder { color:var(--text-dim); }
-    .modal-hint { font-size:11px; color:var(--text-dim); margin-top:3px; }
+    .modal-field label { display:block; font-size:21px; font-weight:500; color:var(--text-mid); margin-bottom:4px; }
+    .modal-field input[type="text"],.modal-field input[type="email"] { width:100% !important; padding:10px 12px !important; border:1px solid var(--border) !important; border-radius:var(--radius-sm) !important; font-family:inherit !important; font-size:13px !important; color:var(--text) !important; background:var(--bg-input) !important; outline:none !important; transition:border-color .15s !important; box-shadow:none !important; }
+    .modal-field input:focus { border-color:var(--green) !important; box-shadow:0 0 0 3px var(--green-dim) !important; }
+    .modal-field input::placeholder { color:var(--text-dim) !important; }
+    .modal-hint { font-size:14px; color:var(--text-dim); margin-top:3px; }
     .modal-deal-summary { background:var(--bg-raised); border:1px solid var(--border-light); border-radius:var(--radius-sm); padding:10px 14px; margin-bottom:16px; }
-    .modal-deal-summary p { font-size:10px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--text-dim); margin-bottom:6px; }
+    .modal-deal-summary p { font-size:13px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--text-dim); margin-bottom:6px; }
     .mds-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:6px; }
-    .mds-item { font-size:11px; color:var(--text-dim); }
-    .mds-item strong { display:block; font-size:13px; font-weight:600; color:var(--text); }
-    .submit-btn { width:100%; padding:12px; background:var(--green); color:#fff; border:none; border-radius:var(--radius-sm); font-family:inherit; font-size:14px; font-weight:700; cursor:pointer; transition:background .15s,transform .1s; margin-top:4px; }
-    .submit-btn:hover { background:var(--green-hover); }
-    .submit-btn:active { transform:scale(.99); }
-    .submit-btn:disabled { opacity:.6; cursor:not-allowed; }
-    .modal-fine { font-size:11px; color:var(--text-dim); text-align:center; margin-top:10px; }
-    .modal-error { font-size:12px; color:var(--red); margin-top:8px; display:none; }
+    .mds-item { font-size:14px; color:var(--text-dim); }
+    .mds-item strong { display:block; font-size:21px; font-weight:600; color:var(--text); }
+    .page-wrap .submit-btn,
+    .page-wrap .submit-btn:link,
+    .page-wrap .submit-btn:visited,
+    .page-wrap .submit-btn:hover,
+    .page-wrap .submit-btn:focus,
+    .page-wrap .submit-btn:active { width:100% !important; padding:12px !important; background:#4a9e6e !important; background-color:#4a9e6e !important; color:#ffffff !important; border:none !important; border-radius:var(--radius-sm) !important; font-family:inherit !important; font-size:17px !important; font-weight:700 !important; cursor:pointer !important; margin-top:4px !important; text-decoration:none !important; box-shadow:none !important; outline:none !important; }
+    .page-wrap .submit-btn:hover { background:#3a8a5c !important; background-color:#3a8a5c !important; }
+    .page-wrap .submit-btn:disabled { opacity:.6 !important; cursor:not-allowed !important; }
+    .modal-fine { font-size:14px; color:var(--text-dim); text-align:center; margin-top:10px; }
+    .modal-error { font-size:21px; color:var(--red); margin-top:8px; display:none; }
     .modal-success { display:none; text-align:center; padding:1rem 0; }
-    .modal-success .check { font-size:40px; margin-bottom:.75rem; }
-    .modal-success h3 { font-size:1.1rem; font-weight:700; color:var(--text); margin-bottom:.5rem; }
-    .modal-success p { font-size:13px; color:var(--text-mid); line-height:1.6; }
+    .modal-success .check { font-size:48px; margin-bottom:.75rem; }
+    .modal-success h3 { font-size:1.4rem; font-weight:700; color:var(--text); margin-bottom:.5rem; }
+    .modal-success p { font-size:21px; color:var(--text-mid); line-height:1.6; }
+    /* Force Google Places dropdown above WordPress footer and everything else */
+    .pac-container { z-index:999999 !important; pointer-events:auto !important; }
+    gmp-place-autocomplete { width:100% !important; }
   </style>
-</head>
-<body>
 <div class="page-wrap">
   <div class="header">
     <div class="logo-wrap">
       <div class="logo-box">
         <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M13 2L4.5 13H11L10 22L19.5 11H13L13 2Z" stroke="#4a9e6e" stroke-width="1.8" stroke-linejoin="round"/>
+          <g transform="translate(12,12) rotate(45)">
+            <path d="M0,-8 L2.5,2 L0,1 L-2.5,2 Z" fill="#4a9e6e"/>
+            <path d="M-2.5,2 L-6,5 L-5,2 Z" fill="#4a9e6e"/>
+            <path d="M2.5,2 L6,5 L5,2 Z" fill="#4a9e6e"/>
+            <path d="M-1.5,4 L-3,8 L0,6.5 L3,8 L1.5,4 Z" fill="#4a9e6e" opacity="0.6"/>
+          </g>
         </svg>
       </div>
       <span class="logo-name">Jet Up Capital</span>
@@ -174,12 +197,12 @@
       </div>
       <div class="card">
         <p class="card-title">Deal details</p>
-        <div class="field"><label>Purchase price</label><div class="input-wrap"><span class="prefix">$</span><input type="number" id="purchase" value="165000" oninput="calc()"></div></div>
-        <div class="field"><label>Rehab budget</label><div class="input-wrap"><span class="prefix">$</span><input type="number" id="rehab" value="40000" oninput="calc()"></div></div>
-        <div class="field"><label>After repair value (ARV)</label><div class="input-wrap"><span class="prefix">$</span><input type="number" id="arv" value="310000" oninput="calc()"></div></div>
+        <div class="field"><label>Purchase price</label><div class="input-wrap"><span class="prefix">$</span><input type="text" id="purchase" value="165,000" oninput="calc()" onfocus="unformatField(this)" onblur="formatField(this)"></div></div>
+        <div class="field"><label>Rehab budget</label><div class="input-wrap"><span class="prefix">$</span><input type="text" id="rehab" value="40,000" oninput="calc()" onfocus="unformatField(this)" onblur="formatField(this)"></div></div>
+        <div class="field"><label>After repair value (ARV)</label><div class="input-wrap"><span class="prefix">$</span><input type="text" id="arv" value="310,000" oninput="calc()" onfocus="unformatField(this)" onblur="formatField(this)"></div></div>
         <div class="grid-2">
           <div class="field"><label>Hold time (months)</label><input type="number" id="hold" value="6" min="1" max="24" oninput="calc()"></div>
-          <div class="field"><label>Taxes &amp; insurance/mo</label><div class="input-wrap"><span class="prefix">$</span><input type="number" id="ti" value="400" oninput="calc()"></div></div>
+          <div class="field"><label>Taxes &amp; insurance/mo</label><div class="input-wrap"><span class="prefix">$</span><input type="text" id="ti" value="400" oninput="calc()" onfocus="unformatField(this)" onblur="formatField(this)"></div></div>
         </div>
       </div>
     </div>
@@ -197,7 +220,7 @@
         <div class="loan-box"><div class="lbox-top"><span class="lbox-label">Initial loan <span class="lbox-sub">(funded at closing)</span></span><span class="lbox-amount" id="r-initial">—</span></div><div class="lbox-meta"><span class="lbox-sub" id="r-initial-sub">LTC% × purchase price</span><span class="lbox-sub" id="r-down">Down payment: —</span></div></div>
         <div class="loan-box"><div class="lbox-top"><span class="lbox-label">Rehab holdback <span class="lbox-sub">(drawn at construction)</span></span><span class="lbox-amount" id="r-holdback">—</span></div><div class="lbox-meta"><span class="lbox-sub">100% of rehab budget</span></div></div>
         <div class="loan-box total"><div class="lbox-top"><span class="lbox-label" style="font-weight:600;color:var(--text);">Total loan amount</span><span class="lbox-amount" id="r-total-loan">—</span></div><div class="lbox-meta" style="align-items:center;margin-top:4px;"><span class="lbox-sub" id="r-arltv-line">ARLTV: —</span><div id="r-total-ltc-bottom"></div></div><div><span class="lbox-sub" id="r-ltfc-line"></span></div></div>
-        <div class="loan-box" style="display:flex;align-items:center;justify-content:space-between;"><span class="lbox-label">Loan term</span><span style="font-size:15px;font-weight:600;color:var(--text);">12 months</span></div>
+        <div class="loan-box" style="display:flex;align-items:center;justify-content:space-between;"><span class="lbox-label">Loan term</span><span style="font-size:21px;font-weight:600;color:var(--text);">12 months</span></div>
         <hr class="div">
         <div class="grid-2" style="margin-bottom:10px;">
           <div class="summary-card"><div class="sc-label">Est. cash to close</div><div class="sc-val" id="r-cash">—</div><div class="sc-sub">See breakdown below</div></div>
@@ -211,7 +234,7 @@
   <div class="card">
     <p class="card-title">Estimated cash to close</p>
     <div class="ri"><span class="rl">Down payment (purchase − initial loan)</span><span class="rv" id="c-down">—</span></div>
-    <div class="ri"><span class="rl">Origination fee (2% of total loan)</span><span class="rv" id="c-orig">—</span></div>
+    <div class="ri"><span class="rl">Origination fee</span><span class="rv" id="c-orig">—</span></div>
     <div class="ri"><span class="rl">Processing, underwriting &amp; service fees</span><span class="rv">$2,500</span></div>
     <div class="ri"><span class="rl">1-month interest reserve</span><span class="rv" id="c-ir">—</span></div>
     <div class="ri"><span class="rl">Title costs <small>(est. 1.5% of loan — varies by state)</small></span><span class="rv" id="c-title">—</span></div>
@@ -224,16 +247,16 @@
     <div class="ri"><span class="rl">Purchase price</span><span class="rv" id="d-purchase">—</span></div>
     <div class="ri"><span class="rl">Rehab budget</span><span class="rv" id="d-rehab">—</span></div>
     <hr class="div">
-    <div class="ri"><span class="rl">Interest — initial loan (10.99% I/O)</span><span class="rv" id="d-int-i">—</span></div>
-    <div class="ri"><span class="rl">Interest — holdback (avg drawn)</span><span class="rv" id="d-int-h">—</span></div>
-    <div class="ri"><span class="rl">Origination fee (2% of total loan)</span><span class="rv" id="d-orig">—</span></div>
+    <div class="ri"><span class="rl" id="d-int-i-label">Interest — initial loan (10.99% I/O)</span><span class="rv" id="d-int-i">—</span></div>
+    <div class="ri"><span class="rl" id="d-int-h-label">Interest — holdback (avg drawn)</span><span class="rv" id="d-int-h">—</span></div>
+    <div class="ri"><span class="rl">Origination fee</span><span class="rv" id="d-orig">—</span></div>
     <div class="ri"><span class="rl">Processing, underwriting &amp; service fees</span><span class="rv">$2,500</span></div>
     <div class="ri"><span class="rl">1-month interest reserve</span><span class="rv" id="d-ir">—</span></div>
     <div class="ri"><span class="rl">Title costs <small>(est. 1.5% of loan)</small></span><span class="rv" id="d-title">—</span></div>
     <div class="ri"><span class="rl">Taxes &amp; insurance</span><span class="rv" id="d-ti">—</span></div>
     <div class="ri total-row"><span class="rl">Total all-in cost</span><span class="rv" id="d-total">—</span></div>
-    <div class="ri" style="padding-top:6px;border-bottom:none;"><span style="font-weight:600;color:var(--text);font-size:13px;">Projected profit (ARV − all-in)</span><span style="font-weight:600;font-size:15px;" id="d-profit">—</span></div>
-    <div class="ri" style="border-bottom:none;"><span style="font-weight:600;color:var(--text);font-size:13px;">Cash-on-Cash return <small style="font-weight:400;">(profit ÷ cash to close)</small></span><span style="font-weight:600;font-size:15px;" id="d-cocr">—</span></div>
+    <div class="ri" style="padding-top:6px;border-bottom:none;"><span style="font-weight:600;color:var(--text);font-size:21px;">Projected profit (ARV − all-in)</span><span style="font-weight:600;font-size:21px;" id="d-profit">—</span></div>
+    <div class="ri" style="border-bottom:none;"><span style="font-weight:600;color:var(--text);font-size:21px;">Cash-on-Cash return <small style="font-weight:400;">(profit ÷ cash to close)</small></span><span style="font-weight:600;font-size:21px;" id="d-cocr">—</span></div>
   </div>
 
   <div class="cta-card">
@@ -276,10 +299,11 @@
       </div>
       <div class="modal-field">
         <label>Subject Property Address <span style="color:var(--red)">*</span></label>
-        <input type="text" id="m-address" placeholder="123 Main St, City, State, ZIP">
+        <input type="text" id="m-address" placeholder="123 Main St, City, State, ZIP" autocomplete="off">
+        <input type="hidden" id="m-address-value">
       </div>
       <div class="modal-error" id="modal-error">Please fill in all required fields.</div>
-      <button class="submit-btn" id="submit-btn" onclick="submitDeal()">Submit My Deal →</button>
+      <button class="submit-btn" id="submit-btn" onclick="submitDeal()" style="background:#4a9e6e !important;background-color:#4a9e6e !important;color:#ffffff !important;border:none !important;width:100% !important;padding:12px !important;font-size:17px !important;font-weight:700 !important;border-radius:6px !important;cursor:pointer !important;margin-top:4px !important;">Submit My Deal →</button>
       <p class="modal-fine">No fees to apply. No impact on your credit score.</p>
     </div>
     <div class="modal-success" id="modal-success">
@@ -296,17 +320,21 @@ const fmt=n=>'$'+Math.round(n).toLocaleString();
 // Global state populated by calc() so modal can read it
 let calcState = {};
 
+function parseVal(id){ return parseFloat(document.getElementById(id).value.replace(/,/g,''))||0; }
+function formatField(el){ const n=parseFloat(el.value.replace(/,/g,'')); if(!isNaN(n)&&n>0) el.value=n.toLocaleString(); }
+function unformatField(el){ const n=parseFloat(el.value.replace(/,/g,'')); if(!isNaN(n)) el.value=n; el.select(); }
+
 function getReno(p,r){if(!p)return{type:'light',label:'Light Rehab (0%)'};const x=r/p,pct=(x*100).toFixed(1)+'%';if(x<=.25)return{type:'light',label:'Light Rehab ('+pct+')'};if(x<=.50)return{type:'moderate',label:'Moderate Rehab ('+pct+')'};if(x<1)return{type:'heavy',label:'Heavy Rehab ('+pct+')'};return{type:'extensive',label:'Extensive Rehab ('+pct+')'};}function getMatrix(t,f,r){const no=x=>({eligible:false,reason:x});const ok=(l,a,e,lf)=>({eligible:true,ltc:l,arltv:a,exit:e.replace(' or 1.1 DSCR',''),ltfc:lf||null});if(t===1){if(f<680)return no('Tier 1 requires minimum 680 FICO');if(r==='heavy'||r==='extensive')return no('Tier 1 is not eligible for heavy or extensive renovations');if(f>=740)return ok(.90,.75,'≥0% ROI or 1.1 DSCR');if(f>=720)return ok(.80,.70,'≥30% ROI or 1.1 DSCR');return ok(.75,.70,'≥30% ROI or 1.1 DSCR');}if(t===2){if(f<680)return no('Tier 2 requires minimum 680 FICO');if(r==='extensive')return no('Tier 2 is not eligible for extensive renovations');if(r==='heavy')return ok(.75,.70,'≥20% ROI or 1.1 DSCR');if(f>=740)return ok(.90,.75,'≥0% ROI or 1.1 DSCR');if(f>=720)return ok(.85,.70,'≥20% ROI or 1.1 DSCR');return ok(.80,.70,'≥20% ROI or 1.1 DSCR');}if(t===3){if(f<660)return no('Tier 3 requires minimum 660 FICO');if(r==='extensive'){if(f<680)return no('Extensive (Tier 3) requires 680+ FICO');return ok(null,.70,'≥20% ROI',.85);}if(r==='heavy')return ok(.80,.75,'≥10% ROI or 1.1 DSCR');if(f>=720)return ok(.90,.75,'≥10% ROI or 1.1 DSCR');return ok(.85,.75,'≥10% ROI or 1.1 DSCR');}if(t===4){if(f<660)return no('Tier 4 requires minimum 660 FICO');if(r==='extensive'){if(f<680)return no('Extensive (Tier 4) requires 680+ FICO');return ok(null,.70,'≥10% ROI',.90);}if(r==='heavy')return ok(.85,.75,'≥0% ROI or 1.1 DSCR');return ok(.90,.75,'≥0% ROI or 1.1 DSCR');}if(t===5){if(f<660)return no('Tier 5 requires minimum 660 FICO');if(r==='extensive'){if(f<680)return no('Extensive (Tier 5) requires 680+ FICO');return ok(.85,.70,'≥10% ROI',.90);}return ok(.90,.75,'≥0% ROI or 1.1 DSCR');}}
 function parseROI(e){const m=e.match(/≥(-?\d+)%\s*ROI/);return m?parseInt(m[1]):null;}
-function chip(tl,p,r){const cb=p+r;if(!cb)return'';return'<span class="chip">Total LTC <strong>'+(tl/cb*100).toFixed(1)+'%</strong></span>';}
+function chip(tl,p,r){const cb=p+r;if(!cb||!isFinite(tl/cb))return'';return'<span class="chip">Total LTC <strong>'+(tl/cb*100).toFixed(1)+'%</strong></span>';}
 function calc(){
   const tier=parseInt(document.getElementById('tier').value);
   const fico=parseInt(document.getElementById('fico').value);
-  const purchase=parseFloat(document.getElementById('purchase').value)||0;
-  const rehab=parseFloat(document.getElementById('rehab').value)||0;
-  const arv=parseFloat(document.getElementById('arv').value)||0;
+  const purchase=parseVal('purchase');
+  const rehab=parseVal('rehab');
+  const arv=parseVal('arv');
   const hold=parseFloat(document.getElementById('hold').value)||6;
-  const ti=parseFloat(document.getElementById('ti').value)||0;
+  const ti=parseVal('ti');
   const reno=getReno(purchase,rehab);
   const matrix=getMatrix(tier,fico,reno.type);
   const rc={light:'badge-green',moderate:'badge-blue',heavy:'badge-amber',extensive:'badge-red'}[reno.type];
@@ -341,11 +369,36 @@ function calc(){
     ltcLbl=(matrix.ltc*100)+'% of purchase';
   }
   const down=purchase-init;
+
+  // Minimum loan & down payment checks
+  if(total < 50000){
+    banner.style.display='block';
+    document.getElementById('ineligible-reason').textContent='Minimum loan amount is $50,000. Current total loan: '+fmt(total)+'.';
+    ['r-ltc-badge','r-total-ltc-top','r-total-ltc-bottom','r-exit-badge'].forEach(id=>document.getElementById(id).innerHTML='');
+    ['r-initial','r-holdback','r-total-loan','r-cash','r-profit','c-down','c-orig','c-ir','c-title','c-ti','c-total','d-purchase','d-rehab','d-int-i','d-int-h','d-orig','d-ir','d-title','d-ti','d-total','d-profit','d-cocr'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent='—';});
+    ['r-down','r-initial-sub','r-arltv-line','r-cocr-line','r-exit-req','r-ltfc-line'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent='—';});
+    return;
+  }
+  if(down < 10000){
+    banner.style.display='block';
+    document.getElementById('ineligible-reason').textContent='Minimum down payment is $10,000. Current down payment: '+fmt(down)+'.';
+    ['r-ltc-badge','r-total-ltc-top','r-total-ltc-bottom','r-exit-badge'].forEach(id=>document.getElementById(id).innerHTML='');
+    ['r-initial','r-holdback','r-total-loan','r-cash','r-profit','c-down','c-orig','c-ir','c-title','c-ti','c-total','d-purchase','d-rehab','d-int-i','d-int-h','d-orig','d-ir','d-title','d-ti','d-total','d-profit','d-cocr'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent='—';});
+    ['r-down','r-initial-sub','r-arltv-line','r-cocr-line','r-exit-req','r-ltfc-line'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent='—';});
+    return;
+  }
+
+  // Interest method: Full Boat (<$100K) vs As Disbursed (>=$100K)
   const mr=0.1099/12;
+  const fullBoat = total < 100000;
+  const intI = fullBoat ? total*mr*hold : init*mr*hold;
+  const intH = fullBoat ? 0 : holdback*mr*(hold/2);
+  if(document.getElementById('d-int-i-label')) document.getElementById('d-int-i-label').textContent = fullBoat ? 'Interest — full loan "Full Boat" (10.99% I/O)' : 'Interest — initial loan "As Disbursed" (10.99% I/O)';
+  if(document.getElementById('d-int-h-label')) document.getElementById('d-int-h-label').textContent = fullBoat ? 'Interest — holdback (included in Full Boat)' : 'Interest — holdback (avg drawn)';
+
+  // Origination: 1% lender (flat) + greater of 1% or $2,500 broker
+  const orig=0.01*total+Math.max(0.01*total,2500);
   const ir=total*mr;
-  const intI=init*mr*hold;
-  const intH=holdback*mr*(hold/2);
-  const orig=0.02*total;
   const svc=2500;
   const title=0.015*total;
   const tiTot=ti*hold;
@@ -410,6 +463,15 @@ function calc(){
 }
 calc();
 
+function hideFooter(){
+  const els = document.querySelectorAll('footer, .site-footer, #footer, [class*="footer"], [id*="footer"]');
+  els.forEach(el=>{ el.dataset.prevZindex=el.style.zIndex||''; el.style.zIndex='0'; el.style.position='relative'; });
+}
+function showFooter(){
+  const els = document.querySelectorAll('footer, .site-footer, #footer, [class*="footer"], [id*="footer"]');
+  els.forEach(el=>{ el.style.zIndex=el.dataset.prevZindex||''; });
+}
+
 // Modal functions
 function openModal(){
   document.getElementById('modal-overlay').classList.add('open');
@@ -418,6 +480,7 @@ function openModal(){
   document.getElementById('modal-error').style.display='none';
   document.getElementById('submit-btn').disabled=false;
   document.getElementById('submit-btn').textContent='Submit My Deal →';
+  hideFooter();
   // Populate deal summary
   document.getElementById('ms-purchase').textContent=fmt(calcState.purchase||0);
   document.getElementById('ms-rehab').textContent=fmt(calcState.rehab||0);
@@ -428,6 +491,7 @@ function openModal(){
 }
 function closeModal(){
   document.getElementById('modal-overlay').classList.remove('open');
+  showFooter();
 }
 function handleOverlayClick(e){
   if(e.target===document.getElementById('modal-overlay')) closeModal();
@@ -438,7 +502,7 @@ async function submitDeal(){
   const name=document.getElementById('m-name').value.trim();
   const email=document.getElementById('m-email').value.trim();
   const closeName=document.getElementById('m-close-name').value.trim();
-  const address=document.getElementById('m-address').value.trim();
+  const address=(document.getElementById('m-address-value')&&document.getElementById('m-address-value').value.trim()) || (document.getElementById('m-address')&&document.getElementById('m-address').value.trim()) || '';
   const errEl=document.getElementById('modal-error');
   if(!name||!email||!closeName||!address){
     errEl.textContent='Please fill in all required fields.';
@@ -508,5 +572,51 @@ async function submitDeal(){
   }
 }
 </script>
-</body>
-</html>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAeFGNzj_sqXNLqHtbF54YQ7o9onRMpiqU&libraries=places&v=weekly" async defer></script>
+<script>
+let autocompleteInitialized = false;
+
+async function initAddressAutocomplete(){
+  const input = document.getElementById('m-address');
+  if(!input || autocompleteInitialized) return;
+  if(!window.google || !window.google.maps){
+    setTimeout(initAddressAutocomplete, 300);
+    return;
+  }
+  try {
+    const { PlaceAutocompleteElement } = await google.maps.importLibrary('places');
+    const placeAutocomplete = new PlaceAutocompleteElement({
+      componentRestrictions: { country: 'us' },
+      types: ['address']
+    });
+    placeAutocomplete.style.width = '100%';
+    input.parentNode.replaceChild(placeAutocomplete, input);
+    placeAutocomplete.id = 'm-address-autocomplete';
+    placeAutocomplete.addEventListener('gmp-placeselect', async ({ place }) => {
+      await place.fetchFields({ fields: ['formattedAddress'] });
+      const hiddenInput = document.getElementById('m-address-value');
+      if(hiddenInput) hiddenInput.value = place.formattedAddress;
+    });
+    autocompleteInitialized = true;
+  } catch(e) {
+    console.warn('PlaceAutocompleteElement failed, falling back:', e);
+    if(!window.google.maps.places) return;
+    const ac = new google.maps.places.Autocomplete(input, {
+      types: ['address'],
+      componentRestrictions: { country: 'us' }
+    });
+    ac.addListener('place_changed', function(){
+      const place = ac.getPlace();
+      if(place && place.formatted_address) input.value = place.formatted_address;
+    });
+    autocompleteInitialized = true;
+  }
+}
+
+const _origOpenModal = openModal;
+openModal = function(){
+  _origOpenModal();
+  autocompleteInitialized = false;
+  setTimeout(initAddressAutocomplete, 200);
+}
+</script>

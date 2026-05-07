@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fix & Flip Deal Analyzer | Jet Up Capital</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green:       #3a7d5a;
+      --green-light: #edf5f0;
+      --green-mid:   #c6dfd1;
+      --ink:         #1a1f1c;
+      --ink-mid:     #4a5450;
+      --ink-light:   #8a9490;
+      --surface:     #ffffff;
+      --surface-2:   #f5f7f6;
+      --surface-3:   #eef1ef;
+      --border:      #dde3df;
+      --border-light:#eef1ef;
+      --red:         #c0392b;
+      --red-light:   #fdf2f1;
+      --amber:       #c07f00;
+      --amber-light: #fdf8ed;
+      --radius:      10px;
+      --radius-sm:   6px;
+      --shadow:      0 1px 3px rgba(0,0,0,.08), 0 4px 16px rgba(0,0,0,.06);
+      --shadow-sm:   0 1px 2px rgba(0,0,0,.06);
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--surface-2);
+      color: var(--ink);
+      min-height: 100vh;
+      padding: 2rem 1rem 4rem;
+    }
+
+    .page-wrap {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+    .header .eyebrow {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--green);
+      margin-bottom: .5rem;
+    }
+    .header h1 {
+      font-size: clamp(1.6rem, 4vw, 2.2rem);
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: .5rem;
+      line-height: 1.2;
+    }
+    .header p {
+      font-size: 15px;
+      color: var(--ink-mid);
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    /* Card */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    .card-title {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--ink-light);
+      margin-bottom: 1rem;
+    }
+
+    /* Two-column grid */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    @media (max-width: 640px) {
+      .grid-2 { grid-template-columns: 1fr; }
+    }
+
+    /* Form elements */
+    label {
+      display: block;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--ink-mid);
+      margin-bottom: 4px;
+    }
+    select, input[type="number"] {
+      width: 100%;
+      padding: 9px 12px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-family: inherit;
+      font-size: 13px;
+      color: var(--ink);
+      background: var(--surface);
+      outline: none;
+      transition: border-color .15s;
+      appearance: none;
+    }
+    select:focus, input:focus { border-color: var(--green); box-shadow: 0 0 0 3px rgba(58,125,90,.1); }
+    .input-wrap { position: relative; }
+    .input-wrap .prefix {
+      position: absolute; left: 10px; top: 50%; transform: translateY(-50%);
+      font-size: 13px; color: var(--ink-light); pointer-events: none;
+    }
+    .input-wrap input { padding-left: 22px; }
+    .field { margin-bottom: 12px; }
+    .field:last-child { margin-bottom: 0; }
+
+    /* Section divider */
+    .divider { border: none; border-top: 1px solid var(--border-light); margin: 14px 0; }
+
+    /* Badges */
+    .badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 500;
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+    .badge-green  { background: var(--green-light);  color: var(--green); }
+    .badge-blue   { background: #edf2fb; color: #2c5fad; }
+    .badge-amber  { background: var(--amber-light);  color: var(--amber); }
+    .badge-red    { background: var(--red-light);    color: var(--red); }
+    .badge-neutral{ background: var(--surface-3);    color: var(--ink-mid); border: 1px solid var(--border); }
+    .badge-pass   { background: var(--green-light);  color: var(--green); }
+    .badge-fail   { background: var(--red-light);    color: var(--red); }
+    .badge-warn   { background: var(--amber-light);  color: var(--amber); }
+
+    /* Metric chip */
+    .chip {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-size: 11px; color: var(--ink-mid);
+      background: var(--surface-3); border: 1px solid var(--border);
+      border-radius: 4px; padding: 2px 8px;
+    }
+    .chip strong { color: var(--ink); font-weight: 600; }
+
+    /* Loan box */
+    .loan-box {
+      background: var(--surface-2);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-sm);
+      padding: 10px 14px;
+      margin-bottom: 8px;
+    }
+    .loan-box:last-child { margin-bottom: 0; }
+    .loan-box .lbox-top { display: flex; justify-content: space-between; align-items: baseline; }
+    .loan-box .lbox-label { font-size: 12px; color: var(--ink-mid); }
+    .loan-box .lbox-sub { font-size: 11px; color: var(--ink-light); }
+    .loan-box .lbox-amount { font-size: 19px; font-weight: 600; color: var(--ink); font-family: 'DM Mono', monospace; }
+    .loan-box .lbox-meta { display: flex; justify-content: space-between; margin-top: 3px; }
+    .loan-box.total { background: var(--green-light); border-color: var(--green-mid); }
+    .loan-box.total .lbox-amount { color: var(--green); }
+
+    /* Summary cards */
+    .summary-card {
+      background: var(--surface-2);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-sm);
+      padding: 12px 14px;
+    }
+    .summary-card .sc-label { font-size: 11px; color: var(--ink-light); margin-bottom: 3px; }
+    .summary-card .sc-val { font-size: 18px; font-weight: 600; color: var(--ink); font-family: 'DM Mono', monospace; }
+    .summary-card .sc-sub { font-size: 11px; color: var(--ink-light); margin-top: 3px; }
+
+    /* Row items (breakdown) */
+    .ri { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid var(--border-light); font-size: 13px; }
+    .ri:last-child { border-bottom: none; }
+    .rl { color: var(--ink-mid); }
+    .rl small { font-size: 11px; color: var(--ink-light); }
+    .rv { font-weight: 500; color: var(--ink); font-family: 'DM Mono', monospace; font-size: 13px; }
+    .ri.total-row { border-top: 1px solid var(--border); padding-top: 10px; margin-top: 4px; border-bottom: none; }
+    .ri.total-row .rl { font-weight: 600; color: var(--ink); }
+    .ri.total-row .rv { font-size: 15px; }
+
+    /* Exit test row */
+    .exit-row {
+      display: flex; align-items: center; justify-content: space-between;
+      background: var(--surface-2); border: 1px solid var(--border-light);
+      border-radius: var(--radius-sm); padding: 10px 14px;
+    }
+    .exit-row .er-label { font-size: 11px; color: var(--ink-light); margin-bottom: 2px; }
+    .exit-row .er-val { font-size: 14px; font-weight: 600; color: var(--ink); }
+
+    /* Ineligible banner */
+    .ineligible {
+      display: none;
+      background: var(--red-light); border: 1px solid #f0c0bb;
+      border-radius: var(--radius-sm); padding: 10px 14px; margin-bottom: 12px;
+    }
+    .ineligible p:first-child { font-size: 13px; font-weight: 600; color: var(--red); margin-bottom: 2px; }
+    .ineligible p:last-child  { font-size: 12px; color: var(--red); }
+
+    /* CTA */
+    .cta-card {
+      background: var(--ink);
+      border-radius: var(--radius);
+      padding: 1.25rem 1.5rem;
+      display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+      margin-top: 1rem;
+    }
+    .cta-card .cta-text h3 { font-size: 15px; font-weight: 600; color: #fff; margin-bottom: 2px; }
+    .cta-card .cta-text p  { font-size: 13px; color: rgba(255,255,255,.6); }
+    .cta-btn {
+      white-space: nowrap;
+      background: var(--green);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-sm);
+      padding: 10px 20px;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      transition: background .15s, transform .1s;
+    }
+    .cta-btn:hover { background: #2e6347; transform: translateY(-1px); }
+
+    @media (max-width: 520px) {
+      .cta-card { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+<div class="page-wrap">
+
+  <div class="header">
+    <p class="eyebrow">Jet Up Capital</p>
+    <h1>Fix &amp; Flip Deal Analyzer</h1>
+    <p>Enter your deal details to instantly see your loan structure, estimated costs, and projected profit.</p>
+  </div>
+
+  <!-- Main grid -->
+  <div class="grid-2">
+
+    <!-- LEFT: Inputs -->
+    <div>
+      <div class="card">
+        <p class="card-title">Borrower profile</p>
+        <div class="field">
+          <label>Completed fix &amp; flips or rentals</label>
+          <select id="tier" onchange="calc()">
+            <option value="1">0 — First flip (Tier 1)</option>
+            <option value="2">1–2 properties (Tier 2)</option>
+            <option value="3" selected>3–4 properties (Tier 3)</option>
+            <option value="4">5–9 properties (Tier 4)</option>
+            <option value="5">10+ properties (Tier 5)</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Credit score (FICO)</label>
+          <select id="fico" onchange="calc()">
+            <option value="600">Below 660 (lender discretion)</option>
+            <option value="660">660 – 679</option>
+            <option value="680" selected>680 – 719</option>
+            <option value="720">720 – 739</option>
+            <option value="740">740+ (High FICO)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="card">
+        <p class="card-title">Deal details</p>
+        <div class="field">
+          <label>Purchase price</label>
+          <div class="input-wrap"><span class="prefix">$</span>
+            <input type="number" id="purchase" value="165000" oninput="calc()">
+          </div>
+        </div>
+        <div class="field">
+          <label>Rehab budget</label>
+          <div class="input-wrap"><span class="prefix">$</span>
+            <input type="number" id="rehab" value="40000" oninput="calc()">
+          </div>
+        </div>
+        <div class="field">
+          <label>After repair value (ARV)</label>
+          <div class="input-wrap"><span class="prefix">$</span>
+            <input type="number" id="arv" value="310000" oninput="calc()">
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="field">
+            <label>Hold time (months)</label>
+            <input type="number" id="hold" value="6" min="1" max="24" oninput="calc()">
+          </div>
+          <div class="field">
+            <label>Taxes &amp; insurance/mo</label>
+            <div class="input-wrap"><span class="prefix">$</span>
+              <input type="number" id="ti" value="400" oninput="calc()">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Results -->
+    <div>
+      <div class="card">
+        <div id="ineligible-banner" class="ineligible">
+          <p>Not eligible under current matrix</p>
+          <p id="ineligible-reason"></p>
+        </div>
+
+        <!-- Loan structure header -->
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px;">
+          <p class="card-title" style="margin:0;">Loan structure</p>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">
+            <div id="r-ltc-badge"></div>
+            <div id="r-total-ltc-top"></div>
+            <div id="r-reno-badge"></div>
+          </div>
+        </div>
+
+        <!-- Initial loan -->
+        <div class="loan-box">
+          <div class="lbox-top">
+            <span class="lbox-label">Initial loan <span class="lbox-sub">(funded at closing)</span></span>
+            <span class="lbox-amount" id="r-initial">—</span>
+          </div>
+          <div class="lbox-meta">
+            <span class="lbox-sub" id="r-initial-sub">LTC% × purchase price</span>
+            <span class="lbox-sub" id="r-down">Down payment: —</span>
+          </div>
+        </div>
+
+        <!-- Holdback -->
+        <div class="loan-box">
+          <div class="lbox-top">
+            <span class="lbox-label">Rehab holdback <span class="lbox-sub">(drawn at construction)</span></span>
+            <span class="lbox-amount" id="r-holdback">—</span>
+          </div>
+          <div class="lbox-meta">
+            <span class="lbox-sub">100% of rehab budget</span>
+          </div>
+        </div>
+
+        <!-- Total -->
+        <div class="loan-box total">
+          <div class="lbox-top">
+            <span class="lbox-label" style="font-weight:600;color:#1a1f1c;">Total loan amount</span>
+            <span class="lbox-amount" id="r-total-loan">—</span>
+          </div>
+          <div class="lbox-meta" style="align-items:center;">
+            <span class="lbox-sub" id="r-arltv-line">ARLTV: —</span>
+            <div id="r-total-ltc-bottom"></div>
+          </div>
+          <div><span class="lbox-sub" id="r-ltfc-line"></span></div>
+        </div>
+
+        <hr class="divider">
+
+        <!-- Summary -->
+        <div class="grid-2" style="margin-bottom:10px;">
+          <div class="summary-card">
+            <div class="sc-label">Est. cash to close</div>
+            <div class="sc-val" id="r-cash">—</div>
+            <div class="sc-sub">See breakdown below</div>
+          </div>
+          <div class="summary-card">
+            <div class="sc-label">Projected profit</div>
+            <div class="sc-val" id="r-profit">—</div>
+            <div class="sc-sub" id="r-cocr-line">Cash-on-Cash: —</div>
+          </div>
+        </div>
+
+        <!-- Exit test -->
+        <div class="exit-row">
+          <div>
+            <div class="er-label">Exit test requirement</div>
+            <div class="er-val" id="r-exit-req">—</div>
+          </div>
+          <div id="r-exit-badge"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Estimated cash to close -->
+  <div class="card">
+    <p class="card-title">Estimated cash to close</p>
+    <div class="ri"><span class="rl">Down payment (purchase − initial loan)</span><span class="rv" id="c-down">—</span></div>
+    <div class="ri"><span class="rl">Origination fee (2% of total loan)</span><span class="rv" id="c-orig">—</span></div>
+    <div class="ri"><span class="rl">Processing, underwriting &amp; service fees</span><span class="rv">$2,500</span></div>
+    <div class="ri"><span class="rl">1-month interest reserve</span><span class="rv" id="c-ir">—</span></div>
+    <div class="ri"><span class="rl">Title costs <small>(est. 1.5% of loan — varies by state)</small></span><span class="rv" id="c-title">—</span></div>
+    <div class="ri"><span class="rl">Taxes &amp; insurance (hold period)</span><span class="rv" id="c-ti">—</span></div>
+    <div class="ri total-row"><span class="rl">Total est. cash to close</span><span class="rv" id="c-total">—</span></div>
+  </div>
+
+  <!-- Deal analysis -->
+  <div class="card">
+    <p class="card-title">Deal analysis</p>
+    <div class="ri"><span class="rl">Purchase price</span><span class="rv" id="d-purchase">—</span></div>
+    <div class="ri"><span class="rl">Rehab budget</span><span class="rv" id="d-rehab">—</span></div>
+    <hr class="divider">
+    <div class="ri"><span class="rl">Interest — initial loan (10.99% I/O)</span><span class="rv" id="d-int-i">—</span></div>
+    <div class="ri"><span class="rl">Interest — holdback (avg drawn)</span><span class="rv" id="d-int-h">—</span></div>
+    <div class="ri"><span class="rl">Origination fee (2% of total loan)</span><span class="rv" id="d-orig">—</span></div>
+    <div class="ri"><span class="rl">Processing, underwriting &amp; service fees</span><span class="rv">$2,500</span></div>
+    <div class="ri"><span class="rl">1-month interest reserve</span><span class="rv" id="d-ir">—</span></div>
+    <div class="ri"><span class="rl">Title costs <small>(est. 1.5% of loan)</small></span><span class="rv" id="d-title">—</span></div>
+    <div class="ri"><span class="rl">Taxes &amp; insurance</span><span class="rv" id="d-ti">—</span></div>
+    <div class="ri total-row"><span class="rl">Total all-in cost</span><span class="rv" id="d-total">—</span></div>
+    <div class="ri" style="padding-top:6px;border-bottom:none;">
+      <span class="rl" style="font-weight:600;color:var(--ink);">Projected profit (ARV − all-in)</span>
+      <span style="font-weight:600;font-size:15px;font-family:'DM Mono',monospace;" id="d-profit">—</span>
+    </div>
+    <div class="ri" style="border-bottom:none;">
+      <span class="rl" style="font-weight:600;color:var(--ink);">Cash-on-Cash return <small>(profit ÷ cash to close)</small></span>
+      <span style="font-weight:600;font-size:15px;font-family:'DM Mono',monospace;" id="d-cocr">—</span>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-card">
+    <div class="cta-text">
+      <h3>Ready to move on this deal?</h3>
+      <p>Get pre-qualified in minutes — no impact to your credit score.</p>
+    </div>
+    <a href="mailto:info@jetupcapital.com?subject=Pre-Qualification%20Request" class="cta-btn" id="cta-btn">
+      Get pre-qualified ↗
+    </a>
+  </div>
+
+</div><!-- /page-wrap -->
+
+<script>
+const fmt = n => '$' + Math.round(n).toLocaleString();
+
+function getReno(purchase, rehab) {
+  if (!purchase) return { type: 'light', label: 'Light Rehab (0%)' };
+  const r = rehab / purchase;
+  const p = (r * 100).toFixed(1) + '%';
+  if (r <= 0.25) return { type: 'light',     label: 'Light Rehab ('     + p + ')' };
+  if (r <= 0.50) return { type: 'moderate',  label: 'Moderate Rehab ('  + p + ')' };
+  if (r < 1.00)  return { type: 'heavy',     label: 'Heavy Rehab ('     + p + ')' };
+  return                 { type: 'extensive', label: 'Extensive Rehab (' + p + ')' };
+}
+
+function getMatrix(tier, fico, reno) {
+  const no = r => ({ eligible: false, reason: r });
+  const ok = (ltc, arltv, exit, ltfc) => ({
+    eligible: true, ltc, arltv,
+    exit: exit.replace(' or 1.1 DSCR', ''),
+    ltfc: ltfc || null
+  });
+  if (tier === 1) {
+    if (fico < 680) return no('Tier 1 requires minimum 680 FICO');
+    if (reno === 'heavy' || reno === 'extensive') return no('Tier 1 is not eligible for heavy or extensive renovations');
+    if (fico >= 740) return ok(0.90, 0.75, '≥0% ROI or 1.1 DSCR');
+    if (fico >= 720) return ok(0.80, 0.70, '≥30% ROI or 1.1 DSCR');
+    return ok(0.75, 0.70, '≥30% ROI or 1.1 DSCR');
+  }
+  if (tier === 2) {
+    if (fico < 680) return no('Tier 2 requires minimum 680 FICO');
+    if (reno === 'extensive') return no('Tier 2 is not eligible for extensive renovations');
+    if (reno === 'heavy') return ok(0.75, 0.70, '≥20% ROI or 1.1 DSCR');
+    if (fico >= 740) return ok(0.90, 0.75, '≥0% ROI or 1.1 DSCR');
+    if (fico >= 720) return ok(0.85, 0.70, '≥20% ROI or 1.1 DSCR');
+    return ok(0.80, 0.70, '≥20% ROI or 1.1 DSCR');
+  }
+  if (tier === 3) {
+    if (fico < 660) return no('Tier 3 requires minimum 660 FICO');
+    if (reno === 'extensive') { if (fico < 680) return no('Extensive (Tier 3) requires 680+ FICO'); return ok(null, 0.70, '≥20% ROI', 0.85); }
+    if (reno === 'heavy') return ok(0.80, 0.75, '≥10% ROI or 1.1 DSCR');
+    if (fico >= 720) return ok(0.90, 0.75, '≥10% ROI or 1.1 DSCR');
+    return ok(0.85, 0.75, '≥10% ROI or 1.1 DSCR');
+  }
+  if (tier === 4) {
+    if (fico < 660) return no('Tier 4 requires minimum 660 FICO');
+    if (reno === 'extensive') { if (fico < 680) return no('Extensive (Tier 4) requires 680+ FICO'); return ok(null, 0.70, '≥10% ROI', 0.90); }
+    if (reno === 'heavy') return ok(0.85, 0.75, '≥0% ROI or 1.1 DSCR');
+    return ok(0.90, 0.75, '≥0% ROI or 1.1 DSCR');
+  }
+  if (tier === 5) {
+    if (fico < 660) return no('Tier 5 requires minimum 660 FICO');
+    if (reno === 'extensive') { if (fico < 680) return no('Extensive (Tier 5) requires 680+ FICO'); return ok(0.85, 0.70, '≥10% ROI', 0.90); }
+    return ok(0.90, 0.75, '≥0% ROI or 1.1 DSCR');
+  }
+}
+
+function parseExitROI(exit) { const m = exit.match(/≥(-?\d+)%\s*ROI/); return m ? parseInt(m[1]) : null; }
+
+function ltcChip(totalLoan, purchase, rehab) {
+  const cb = purchase + rehab;
+  if (!cb) return '';
+  return '<span class="chip">Total LTC <strong>' + (totalLoan / cb * 100).toFixed(1) + '%</strong></span>';
+}
+
+function calc() {
+  const tier     = parseInt(document.getElementById('tier').value);
+  const fico     = parseInt(document.getElementById('fico').value);
+  const purchase = parseFloat(document.getElementById('purchase').value) || 0;
+  const rehab    = parseFloat(document.getElementById('rehab').value) || 0;
+  const arv      = parseFloat(document.getElementById('arv').value) || 0;
+  const hold     = parseFloat(document.getElementById('hold').value) || 6;
+  const ti       = parseFloat(document.getElementById('ti').value) || 0;
+
+  const reno   = getReno(purchase, rehab);
+  const matrix = getMatrix(tier, fico, reno.type);
+
+  const renoBadgeClass = { light: 'badge-green', moderate: 'badge-blue', heavy: 'badge-amber', extensive: 'badge-red' }[reno.type];
+  document.getElementById('r-reno-badge').innerHTML = '<span class="badge ' + renoBadgeClass + '">' + reno.label + '</span>';
+
+  const banner = document.getElementById('ineligible-banner');
+
+  if (!matrix.eligible) {
+    banner.style.display = 'block';
+    document.getElementById('ineligible-reason').textContent = matrix.reason;
+    document.getElementById('r-ltc-badge').innerHTML = '';
+    document.getElementById('r-total-ltc-top').innerHTML = '';
+    document.getElementById('r-total-ltc-bottom').innerHTML = '';
+    ['r-initial','r-holdback','r-total-loan','r-cash','r-profit',
+     'c-down','c-orig','c-ir','c-title','c-ti','c-total',
+     'd-purchase','d-rehab','d-int-i','d-int-h','d-orig','d-ir','d-title','d-ti','d-total','d-profit','d-cocr']
+    .forEach(id => { const e = document.getElementById(id); if (e) e.textContent = '—'; });
+    ['r-down','r-initial-sub','r-arltv-line','r-cocr-line','r-exit-req']
+    .forEach(id => { const e = document.getElementById(id); if (e) e.textContent = '—'; });
+    document.getElementById('r-ltfc-line').textContent = '';
+    document.getElementById('r-exit-badge').innerHTML = '';
+    return;
+  }
+  banner.style.display = 'none';
+
+  // Loan logic — holdback protected, initial reduced if ARLTV cap hit
+  const maxByARLTV = matrix.arltv * arv;
+  const holdback = rehab;
+  let initialLoan, totalLoan, ltcLabel, ltfcNote = '', initialCapped = false;
+
+  if (matrix.ltfc) {
+    const cap = Math.min(maxByARLTV, matrix.ltfc * (purchase + rehab), 1000000);
+    const ltcMax = matrix.ltc ? matrix.ltc * purchase : Infinity;
+    initialLoan = Math.min(ltcMax, Math.max(0, cap - holdback));
+    initialCapped = matrix.ltc && (initialLoan < matrix.ltc * purchase);
+    totalLoan = initialLoan + holdback;
+    ltcLabel  = matrix.ltc ? (matrix.ltc * 100) + '% of purchase' : 'LTFC ' + (matrix.ltfc * 100) + '%';
+    ltfcNote  = 'LTFC cap: ' + (matrix.ltfc * 100) + '% of full cost';
+  } else {
+    const cap = Math.min(maxByARLTV, 1000000);
+    const ltcFull = matrix.ltc * purchase;
+    initialLoan   = Math.min(ltcFull, Math.max(0, cap - holdback));
+    initialCapped = initialLoan < ltcFull;
+    totalLoan     = initialLoan + holdback;
+    ltcLabel      = (matrix.ltc * 100) + '% of purchase';
+  }
+
+  const downPayment = purchase - initialLoan;
+  const mr          = 0.1099 / 12;
+  const intReserve  = totalLoan * mr;
+  const intI        = initialLoan * mr * hold;
+  const intH        = holdback * mr * (hold / 2);
+  const origFee     = 0.02 * totalLoan;
+  const svcFee      = 2500;
+  const titleCost   = 0.015 * totalLoan;
+  const tiTotal     = ti * hold;
+
+  const cashToClose = downPayment + origFee + svcFee + intReserve + titleCost + tiTotal;
+  const allIn       = purchase + rehab + intI + intH + origFee + svcFee + intReserve + titleCost + tiTotal;
+  const profit      = arv - allIn;
+  const cocr        = cashToClose > 0 ? (profit / cashToClose * 100) : 0;
+  const actualARLTV = arv > 0 ? (totalLoan / arv * 100) : 0;
+
+  // Badges
+  document.getElementById('r-ltc-badge').innerHTML = '<span class="badge badge-neutral">' + ltcLabel + '</span>';
+  const chip = ltcChip(totalLoan, purchase, rehab);
+  document.getElementById('r-total-ltc-top').innerHTML    = chip;
+  document.getElementById('r-total-ltc-bottom').innerHTML = chip;
+
+  // Loan structure
+  document.getElementById('r-initial').textContent = fmt(initialLoan);
+  document.getElementById('r-initial-sub').textContent = initialCapped
+    ? '⚠ Reduced from ' + fmt(matrix.ltc * purchase) + ' — ARLTV cap; holdback protected'
+    : (matrix.ltc ? (matrix.ltc * 100) + '% × ' + fmt(purchase) : 'Derived from LTFC cap');
+  document.getElementById('r-down').textContent     = 'Down payment: ' + fmt(downPayment);
+  document.getElementById('r-holdback').textContent = fmt(holdback);
+  document.getElementById('r-total-loan').textContent = fmt(totalLoan);
+  document.getElementById('r-arltv-line').textContent  = 'ARLTV: ' + actualARLTV.toFixed(1) + '% (max ' + (matrix.arltv * 100) + '%)';
+  document.getElementById('r-ltfc-line').textContent   = ltfcNote;
+
+  // Summary
+  document.getElementById('r-cash').textContent = fmt(cashToClose);
+  const pe = document.getElementById('r-profit');
+  pe.textContent = fmt(profit);
+  pe.style.color = profit >= 0 ? 'var(--green)' : 'var(--red)';
+  const cl = document.getElementById('r-cocr-line');
+  cl.textContent = 'Cash-on-Cash: ' + cocr.toFixed(1) + '%';
+  cl.style.color = profit >= 0 ? 'var(--green)' : 'var(--red)';
+
+  // Exit test
+  document.getElementById('r-exit-req').textContent = matrix.exit;
+  const reqROI = parseExitROI(matrix.exit);
+  let exitLabel, exitClass;
+  if (reqROI !== null) { const pass = cocr >= reqROI; exitLabel = pass ? 'Pass ✓' : 'Fail ✗'; exitClass = pass ? 'badge-pass' : 'badge-fail'; }
+  else { exitLabel = 'Review'; exitClass = 'badge-warn'; }
+  document.getElementById('r-exit-badge').innerHTML = '<span class="badge ' + exitClass + '">' + exitLabel + '</span>';
+
+  // Cash to close
+  document.getElementById('c-down').textContent  = fmt(downPayment);
+  document.getElementById('c-orig').textContent  = fmt(origFee);
+  document.getElementById('c-ir').textContent    = fmt(intReserve);
+  document.getElementById('c-title').textContent = fmt(titleCost);
+  document.getElementById('c-ti').textContent    = fmt(tiTotal);
+  document.getElementById('c-total').textContent = fmt(cashToClose);
+
+  // Deal analysis
+  document.getElementById('d-purchase').textContent = fmt(purchase);
+  document.getElementById('d-rehab').textContent    = fmt(rehab);
+  document.getElementById('d-int-i').textContent    = fmt(intI);
+  document.getElementById('d-int-h').textContent    = fmt(intH);
+  document.getElementById('d-orig').textContent     = fmt(origFee);
+  document.getElementById('d-ir').textContent       = fmt(intReserve);
+  document.getElementById('d-title').textContent    = fmt(titleCost);
+  document.getElementById('d-ti').textContent       = fmt(tiTotal);
+  document.getElementById('d-total').textContent    = fmt(allIn);
+  const dp = document.getElementById('d-profit');
+  dp.textContent = fmt(profit);
+  dp.style.color = profit >= 0 ? 'var(--green)' : 'var(--red)';
+  const dc = document.getElementById('d-cocr');
+  dc.textContent = cocr.toFixed(1) + '%';
+  dc.style.color = profit >= 0 ? 'var(--green)' : 'var(--red)';
+
+  // Update CTA mailto with deal summary
+  const ctaBtn = document.getElementById('cta-btn');
+  const subject = encodeURIComponent('Pre-Qualification Request — ' + fmt(purchase) + ' Purchase');
+  const body = encodeURIComponent(
+    'Hi Jet Up Capital,\n\nI ran a fix & flip analysis and would like to get pre-qualified.\n\n' +
+    'Purchase: ' + fmt(purchase) + '\nRehab: ' + fmt(rehab) + '\nARV: ' + fmt(arv) + '\n' +
+    'Initial loan: ' + fmt(initialLoan) + '\nRehab holdback: ' + fmt(holdback) + '\nTotal loan: ' + fmt(totalLoan) + '\n' +
+    'Est. cash to close: ' + fmt(cashToClose) + '\nProjected profit: ' + fmt(profit) + '\nCash-on-Cash: ' + cocr.toFixed(1) + '%\n\n' +
+    'Please reach out to discuss next steps.\n\nThank you'
+  );
+  ctaBtn.href = 'mailto:info@jetupcapital.com?subject=' + subject + '&body=' + body;
+}
+
+calc();
+</script>
+</body>
+</html>

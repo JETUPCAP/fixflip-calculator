@@ -97,6 +97,38 @@
     .cta-btn { white-space:nowrap; background:#fff; color:var(--green-hover); border:none; border-radius:var(--radius-sm); padding:10px 20px; font-family:inherit; font-size:13px; font-weight:700; cursor:pointer; text-decoration:none; display:inline-block; transition:transform .1s,box-shadow .15s; box-shadow:0 2px 8px rgba(0,0,0,.3); }
     .cta-btn:hover { transform:translateY(-1px); box-shadow:0 4px 14px rgba(0,0,0,.4); }
     @media(max-width:520px){.cta-card{flex-direction:column;align-items:flex-start;}}
+
+    /* Modal */
+    .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.75); z-index:1000; align-items:center; justify-content:center; padding:1rem; backdrop-filter:blur(4px); }
+    .modal-overlay.open { display:flex; }
+    .modal { background:var(--bg-card); border:1px solid var(--border); border-radius:14px; width:100%; max-width:480px; padding:2rem; position:relative; animation:modalIn .2s ease; }
+    @keyframes modalIn { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+    .modal-close { position:absolute; top:14px; right:14px; background:var(--bg-raised); border:1px solid var(--border); border-radius:6px; color:var(--text-mid); font-size:18px; line-height:1; width:28px; height:28px; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:color .15s; }
+    .modal-close:hover { color:var(--text); }
+    .modal-eyebrow { font-size:10px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:var(--green); margin-bottom:.5rem; }
+    .modal h2 { font-size:1.25rem; font-weight:700; color:var(--text); margin-bottom:.5rem; line-height:1.3; }
+    .modal-sub { font-size:13px; color:var(--text-mid); line-height:1.6; margin-bottom:1.5rem; }
+    .modal-field { margin-bottom:12px; }
+    .modal-field label { display:block; font-size:12px; font-weight:500; color:var(--text-mid); margin-bottom:4px; }
+    .modal-field input[type="text"],.modal-field input[type="email"] { width:100%; padding:10px 12px; border:1px solid var(--border); border-radius:var(--radius-sm); font-family:inherit; font-size:13px; color:var(--text); background:var(--bg-input); outline:none; transition:border-color .15s; }
+    .modal-field input:focus { border-color:var(--green); box-shadow:0 0 0 3px var(--green-dim); }
+    .modal-field input::placeholder { color:var(--text-dim); }
+    .modal-hint { font-size:11px; color:var(--text-dim); margin-top:3px; }
+    .modal-deal-summary { background:var(--bg-raised); border:1px solid var(--border-light); border-radius:var(--radius-sm); padding:10px 14px; margin-bottom:16px; }
+    .modal-deal-summary p { font-size:10px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--text-dim); margin-bottom:6px; }
+    .mds-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:6px; }
+    .mds-item { font-size:11px; color:var(--text-dim); }
+    .mds-item strong { display:block; font-size:13px; font-weight:600; color:var(--text); }
+    .submit-btn { width:100%; padding:12px; background:var(--green); color:#fff; border:none; border-radius:var(--radius-sm); font-family:inherit; font-size:14px; font-weight:700; cursor:pointer; transition:background .15s,transform .1s; margin-top:4px; }
+    .submit-btn:hover { background:var(--green-hover); }
+    .submit-btn:active { transform:scale(.99); }
+    .submit-btn:disabled { opacity:.6; cursor:not-allowed; }
+    .modal-fine { font-size:11px; color:var(--text-dim); text-align:center; margin-top:10px; }
+    .modal-error { font-size:12px; color:var(--red); margin-top:8px; display:none; }
+    .modal-success { display:none; text-align:center; padding:1rem 0; }
+    .modal-success .check { font-size:40px; margin-bottom:.75rem; }
+    .modal-success h3 { font-size:1.1rem; font-weight:700; color:var(--text); margin-bottom:.5rem; }
+    .modal-success p { font-size:13px; color:var(--text-mid); line-height:1.6; }
   </style>
 </head>
 <body>
@@ -205,15 +237,66 @@
   </div>
 
   <div class="cta-card">
-    <div class="cta-text"><h3>Ready to move on this deal?</h3><p>Get pre-qualified in minutes — no impact to your credit score.</p></div>
-    <a href="https://jetupcapital.com/apply-now" class="cta-btn" target="_parent">Get pre-qualified ↗</a>
+    <div class="cta-text"><h3>Ready to move on this deal?</h3><p>Submit your deal and get your term sheet — usually within 24 hours.</p></div>
+    <button class="cta-btn" onclick="openModal()">Submit My Deal →</button>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modal-overlay" onclick="handleOverlayClick(event)">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div id="modal-form-view">
+      <p class="modal-eyebrow">Jet Up Capital</p>
+      <h2>Ready to Move on This Deal?</h2>
+      <p class="modal-sub">Submit your deal below and we'll get back to you with a term sheet — usually within 24 hours. Need proof of funds for an offer? We've got you covered. No fees to apply. No impact on your credit score.</p>
+      <div class="modal-deal-summary">
+        <p>Deal Summary</p>
+        <div class="mds-grid">
+          <div class="mds-item"><strong id="ms-purchase">—</strong>Purchase Price</div>
+          <div class="mds-item"><strong id="ms-rehab">—</strong>Rehab Budget</div>
+          <div class="mds-item"><strong id="ms-arv">—</strong>ARV</div>
+          <div class="mds-item"><strong id="ms-loan">—</strong>Total Loan</div>
+          <div class="mds-item"><strong id="ms-profit">—</strong>Est. Profit</div>
+          <div class="mds-item"><strong id="ms-fico">—</strong>FICO Range</div>
+        </div>
+      </div>
+      <div class="modal-field">
+        <label>Full Name <span style="color:var(--red)">*</span></label>
+        <input type="text" id="m-name" placeholder="John Smith">
+      </div>
+      <div class="modal-field">
+        <label>Email Address <span style="color:var(--red)">*</span></label>
+        <input type="email" id="m-email" placeholder="john@example.com">
+      </div>
+      <div class="modal-field">
+        <label>Name to Close In <span style="color:var(--red)">*</span></label>
+        <input type="text" id="m-close-name" placeholder="e.g. Smith Holdings LLC, John Smith">
+        <p class="modal-hint">LLC, trust, personal name, etc.</p>
+      </div>
+      <div class="modal-field">
+        <label>Subject Property Address <span style="color:var(--red)">*</span></label>
+        <input type="text" id="m-address" placeholder="123 Main St, City, State, ZIP">
+      </div>
+      <div class="modal-error" id="modal-error">Please fill in all required fields.</div>
+      <button class="submit-btn" id="submit-btn" onclick="submitDeal()">Submit My Deal →</button>
+      <p class="modal-fine">No fees to apply. No impact on your credit score.</p>
+    </div>
+    <div class="modal-success" id="modal-success">
+      <div class="check">✅</div>
+      <h3>You're all set!</h3>
+      <p>A member of the Jet Up Capital team will reach out within 24 hours with your term sheet. Keep an eye on your inbox.</p>
+    </div>
   </div>
 </div>
 
 <script>
 const fmt=n=>'$'+Math.round(n).toLocaleString();
-function getReno(p,r){if(!p)return{type:'light',label:'Light Rehab (0%)'};const x=r/p,pct=(x*100).toFixed(1)+'%';if(x<=.25)return{type:'light',label:'Light Rehab ('+pct+')'};if(x<=.50)return{type:'moderate',label:'Moderate Rehab ('+pct+')'};if(x<1)return{type:'heavy',label:'Heavy Rehab ('+pct+')'};return{type:'extensive',label:'Extensive Rehab ('+pct+')'};}
-function getMatrix(t,f,r){const no=x=>({eligible:false,reason:x});const ok=(l,a,e,lf)=>({eligible:true,ltc:l,arltv:a,exit:e.replace(' or 1.1 DSCR',''),ltfc:lf||null});if(t===1){if(f<680)return no('Tier 1 requires minimum 680 FICO');if(r==='heavy'||r==='extensive')return no('Tier 1 is not eligible for heavy or extensive renovations');if(f>=740)return ok(.90,.75,'≥0% ROI or 1.1 DSCR');if(f>=720)return ok(.80,.70,'≥30% ROI or 1.1 DSCR');return ok(.75,.70,'≥30% ROI or 1.1 DSCR');}if(t===2){if(f<680)return no('Tier 2 requires minimum 680 FICO');if(r==='extensive')return no('Tier 2 is not eligible for extensive renovations');if(r==='heavy')return ok(.75,.70,'≥20% ROI or 1.1 DSCR');if(f>=740)return ok(.90,.75,'≥0% ROI or 1.1 DSCR');if(f>=720)return ok(.85,.70,'≥20% ROI or 1.1 DSCR');return ok(.80,.70,'≥20% ROI or 1.1 DSCR');}if(t===3){if(f<660)return no('Tier 3 requires minimum 660 FICO');if(r==='extensive'){if(f<680)return no('Extensive (Tier 3) requires 680+ FICO');return ok(null,.70,'≥20% ROI',.85);}if(r==='heavy')return ok(.80,.75,'≥10% ROI or 1.1 DSCR');if(f>=720)return ok(.90,.75,'≥10% ROI or 1.1 DSCR');return ok(.85,.75,'≥10% ROI or 1.1 DSCR');}if(t===4){if(f<660)return no('Tier 4 requires minimum 660 FICO');if(r==='extensive'){if(f<680)return no('Extensive (Tier 4) requires 680+ FICO');return ok(null,.70,'≥10% ROI',.90);}if(r==='heavy')return ok(.85,.75,'≥0% ROI or 1.1 DSCR');return ok(.90,.75,'≥0% ROI or 1.1 DSCR');}if(t===5){if(f<660)return no('Tier 5 requires minimum 660 FICO');if(r==='extensive'){if(f<680)return no('Extensive (Tier 5) requires 680+ FICO');return ok(.85,.70,'≥10% ROI',.90);}return ok(.90,.75,'≥0% ROI or 1.1 DSCR');}}
+
+// Global state populated by calc() so modal can read it
+let calcState = {};
+
+function getReno(p,r){if(!p)return{type:'light',label:'Light Rehab (0%)'};const x=r/p,pct=(x*100).toFixed(1)+'%';if(x<=.25)return{type:'light',label:'Light Rehab ('+pct+')'};if(x<=.50)return{type:'moderate',label:'Moderate Rehab ('+pct+')'};if(x<1)return{type:'heavy',label:'Heavy Rehab ('+pct+')'};return{type:'extensive',label:'Extensive Rehab ('+pct+')'};}function getMatrix(t,f,r){const no=x=>({eligible:false,reason:x});const ok=(l,a,e,lf)=>({eligible:true,ltc:l,arltv:a,exit:e.replace(' or 1.1 DSCR',''),ltfc:lf||null});if(t===1){if(f<680)return no('Tier 1 requires minimum 680 FICO');if(r==='heavy'||r==='extensive')return no('Tier 1 is not eligible for heavy or extensive renovations');if(f>=740)return ok(.90,.75,'≥0% ROI or 1.1 DSCR');if(f>=720)return ok(.80,.70,'≥30% ROI or 1.1 DSCR');return ok(.75,.70,'≥30% ROI or 1.1 DSCR');}if(t===2){if(f<680)return no('Tier 2 requires minimum 680 FICO');if(r==='extensive')return no('Tier 2 is not eligible for extensive renovations');if(r==='heavy')return ok(.75,.70,'≥20% ROI or 1.1 DSCR');if(f>=740)return ok(.90,.75,'≥0% ROI or 1.1 DSCR');if(f>=720)return ok(.85,.70,'≥20% ROI or 1.1 DSCR');return ok(.80,.70,'≥20% ROI or 1.1 DSCR');}if(t===3){if(f<660)return no('Tier 3 requires minimum 660 FICO');if(r==='extensive'){if(f<680)return no('Extensive (Tier 3) requires 680+ FICO');return ok(null,.70,'≥20% ROI',.85);}if(r==='heavy')return ok(.80,.75,'≥10% ROI or 1.1 DSCR');if(f>=720)return ok(.90,.75,'≥10% ROI or 1.1 DSCR');return ok(.85,.75,'≥10% ROI or 1.1 DSCR');}if(t===4){if(f<660)return no('Tier 4 requires minimum 660 FICO');if(r==='extensive'){if(f<680)return no('Extensive (Tier 4) requires 680+ FICO');return ok(null,.70,'≥10% ROI',.90);}if(r==='heavy')return ok(.85,.75,'≥0% ROI or 1.1 DSCR');return ok(.90,.75,'≥0% ROI or 1.1 DSCR');}if(t===5){if(f<660)return no('Tier 5 requires minimum 660 FICO');if(r==='extensive'){if(f<680)return no('Extensive (Tier 5) requires 680+ FICO');return ok(.85,.70,'≥10% ROI',.90);}return ok(.90,.75,'≥0% ROI or 1.1 DSCR');}}
 function parseROI(e){const m=e.match(/≥(-?\d+)%\s*ROI/);return m?parseInt(m[1]):null;}
 function chip(tl,p,r){const cb=p+r;if(!cb)return'';return'<span class="chip">Total LTC <strong>'+(tl/cb*100).toFixed(1)+'%</strong></span>';}
 function calc(){
@@ -306,8 +389,124 @@ function calc(){
   document.getElementById('d-total').textContent=fmt(allIn);
   const dp=document.getElementById('d-profit');dp.textContent=fmt(profit);dp.style.color=profit>=0?'var(--green)':'var(--red)';
   const dc=document.getElementById('d-cocr');dc.textContent=cocr.toFixed(1)+'%';dc.style.color=profit>=0?'var(--green)':'var(--red)';
+
+  // Store for modal
+  const tierEl=document.getElementById('tier');
+  const ficoEl=document.getElementById('fico');
+  calcState = {
+    purchase, rehab, arv, hold, ti,
+    initialLoan: init,
+    rehabHoldback: holdback,
+    totalLoan: total,
+    arltv: arltv.toFixed(1)+'%',
+    profit, cocr: cocr.toFixed(1)+'%',
+    cashToClose: ctc,
+    loanTerm: '12 months',
+    ficoLabel: ficoEl.options[ficoEl.selectedIndex].text,
+    tierLabel: tierEl.options[tierEl.selectedIndex].text,
+    renoLabel: reno.label,
+    exitReq: matrix.exit
+  };
 }
 calc();
+
+// Modal functions
+function openModal(){
+  document.getElementById('modal-overlay').classList.add('open');
+  document.getElementById('modal-form-view').style.display='block';
+  document.getElementById('modal-success').style.display='none';
+  document.getElementById('modal-error').style.display='none';
+  document.getElementById('submit-btn').disabled=false;
+  document.getElementById('submit-btn').textContent='Submit My Deal →';
+  // Populate deal summary
+  document.getElementById('ms-purchase').textContent=fmt(calcState.purchase||0);
+  document.getElementById('ms-rehab').textContent=fmt(calcState.rehab||0);
+  document.getElementById('ms-arv').textContent=fmt(calcState.arv||0);
+  document.getElementById('ms-loan').textContent=fmt(calcState.totalLoan||0);
+  document.getElementById('ms-profit').textContent=fmt(calcState.profit||0);
+  document.getElementById('ms-fico').textContent=calcState.ficoLabel||'—';
+}
+function closeModal(){
+  document.getElementById('modal-overlay').classList.remove('open');
+}
+function handleOverlayClick(e){
+  if(e.target===document.getElementById('modal-overlay')) closeModal();
+}
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeModal(); });
+
+async function submitDeal(){
+  const name=document.getElementById('m-name').value.trim();
+  const email=document.getElementById('m-email').value.trim();
+  const closeName=document.getElementById('m-close-name').value.trim();
+  const address=document.getElementById('m-address').value.trim();
+  const errEl=document.getElementById('modal-error');
+  if(!name||!email||!closeName||!address){
+    errEl.textContent='Please fill in all required fields.';
+    errEl.style.display='block';
+    return;
+  }
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
+    errEl.textContent='Please enter a valid email address.';
+    errEl.style.display='block';
+    return;
+  }
+  errEl.style.display='none';
+  const btn=document.getElementById('submit-btn');
+  btn.disabled=true;
+  btn.textContent='Submitting…';
+
+  const nameParts=name.split(' ');
+  const firstname=nameParts[0];
+  const lastname=nameParts.slice(1).join(' ')||'';
+
+  const payload={
+    fields:[
+      {name:'firstname',value:firstname},
+      {name:'lastname',value:lastname},
+      {name:'email',value:email},
+      {name:'company',value:closeName},
+      {name:'subject_property_address',value:address},
+      {name:'purchase_price',value:String(calcState.purchase||0)},
+      {name:'rehab_budget',value:String(calcState.rehab||0)},
+      {name:'arv',value:String(calcState.arv||0)},
+      {name:'fix__flip_fico',value:calcState.ficoLabel||''},
+      {name:'experience_tier',value:calcState.tierLabel||''},
+      {name:'initial_loan_amount',value:String(Math.round(calcState.initialLoan||0))},
+      {name:'rehab_holdback',value:String(Math.round(calcState.rehabHoldback||0))},
+      {name:'total_loan_amount',value:String(Math.round(calcState.totalLoan||0))},
+      {name:'arltv',value:calcState.arltv||''},
+      {name:'projected_profit',value:String(Math.round(calcState.profit||0))},
+      {name:'cash_to_close',value:String(Math.round(calcState.cashToClose||0))},
+      {name:'loan_term',value:'12 months'},
+      {name:'renovation_type',value:calcState.renoLabel||''},
+      {name:'exit_requirement',value:calcState.exitReq||''}
+    ],
+    context:{pageUri:window.location.href,pageName:'Fix & Flip Calculator — Jet Up Capital'}
+  };
+
+  try{
+    const res=await fetch('https://api.hsforms.com/submissions/v3/integration/submit/46933601/c2dd6897-2e32-4ed5-bee5-5f757c88c6c8',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(payload)
+    });
+    if(res.ok){
+      document.getElementById('modal-form-view').style.display='none';
+      document.getElementById('modal-success').style.display='block';
+    } else {
+      const data=await res.json().catch(()=>({}));
+      errEl.textContent='Submission failed: '+(data.message||'Please try again.');
+      errEl.style.display='block';
+      btn.disabled=false;
+      btn.textContent='Submit My Deal →';
+    }
+  }catch(err){
+    errEl.textContent='Network error. Please check your connection and try again.';
+    errEl.style.display='block';
+    btn.disabled=false;
+    btn.textContent='Submit My Deal →';
+  }
+}
 </script>
 </body>
 </html>

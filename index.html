@@ -515,10 +515,29 @@ async function submitDeal(){
   const name=document.getElementById('m-name').value.trim();
   const email=document.getElementById('m-email').value.trim();
   const closeName=document.getElementById('m-close-name').value.trim();
-  const address=(document.getElementById('m-address-value')&&document.getElementById('m-address-value').value.trim()) || (document.getElementById('m-address')&&document.getElementById('m-address').value.trim()) || '';
+
+  // Get address from hidden field, autocomplete element, or original input
+  let address = '';
+  const hiddenAddr = document.getElementById('m-address-value');
+  const autocompleteEl = document.getElementById('m-address-autocomplete');
+  const plainAddr = document.getElementById('m-address');
+  if(hiddenAddr && hiddenAddr.value.trim()) {
+    address = hiddenAddr.value.trim();
+  } else if(autocompleteEl) {
+    // Try to get value from the web component's internal input
+    const innerInput = autocompleteEl.shadowRoot ? autocompleteEl.shadowRoot.querySelector('input') : null;
+    address = (innerInput && innerInput.value.trim()) || autocompleteEl.value || '';
+  } else if(plainAddr) {
+    address = plainAddr.value.trim();
+  }
+
   const errEl=document.getElementById('modal-error');
   if(!name||!email||!closeName||!address){
-    errEl.textContent='Please fill in all required fields.';
+    // Show which field is missing
+    if(!name) errEl.textContent='Please enter your full name.';
+    else if(!email) errEl.textContent='Please enter your email address.';
+    else if(!closeName) errEl.textContent='Please enter the name to close in.';
+    else errEl.textContent='Please select a subject property address from the dropdown.';
     errEl.style.display='block';
     return;
   }
@@ -534,7 +553,7 @@ async function submitDeal(){
 
   const nameParts=name.split(' ');
   const firstname=nameParts[0];
-  const lastname=nameParts.slice(1).join(' ')||'';
+  const lastname=nameParts.length>1 ? nameParts.slice(1).join(' ') : nameParts[0];
 
   const payload={
     fields:[
@@ -572,7 +591,9 @@ async function submitDeal(){
       document.getElementById('modal-success').style.display='block';
     } else {
       const data=await res.json().catch(()=>({}));
-      errEl.textContent='Submission failed: '+(data.message||'Please try again.');
+      console.error('HubSpot error:', JSON.stringify(data, null, 2));
+      const msg = data.errors ? data.errors.map(e=>e.message).join(', ') : (data.message||'Unknown error');
+      errEl.textContent='Submission failed: '+msg;
       errEl.style.display='block';
       btn.disabled=false;
       btn.textContent='Submit My Deal →';
@@ -607,8 +628,9 @@ async function initAddressAutocomplete(){
     placeAutocomplete.id = 'm-address-autocomplete';
     placeAutocomplete.addEventListener('gmp-placeselect', async ({ place }) => {
       await place.fetchFields({ fields: ['formattedAddress'] });
+      const addr = place.formattedAddress || '';
       const hiddenInput = document.getElementById('m-address-value');
-      if(hiddenInput) hiddenInput.value = place.formattedAddress;
+      if(hiddenInput) hiddenInput.value = addr;
     });
     autocompleteInitialized = true;
   } catch(e) {
